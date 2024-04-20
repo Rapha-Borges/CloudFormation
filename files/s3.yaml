@@ -1,43 +1,37 @@
-# Cloudformation de um S3 bucket com permissões de escrita e leitura para todos que possuem a URL e a chave de acesso
-# Output: URL e chave de acesso para o bucket
-
 Resources:
-  MyS3Bucket:
+  MyBucket:
     Type: 'AWS::S3::Bucket'
     Properties:
-      BucketName: giropops-s3-bucket
-      AccessControl: Private
+      BucketName: my-bucket
       PublicAccessBlockConfiguration:
-        BlockPublicAcls: true
-        IgnorePublicAcls: true
-        BlockPublicPolicy: true
-        RestrictPublicBuckets: true
+        BlockPublicAcls: false
+        BlockPublicPolicy: false
+        IgnorePublicAcls: false
+        RestrictPublicBuckets: false
   MyBucketPolicy:
     Type: 'AWS::S3::BucketPolicy'
     Properties:
-      Bucket: !Ref MyS3Bucket
+      Bucket:
+        Ref: 'MyBucket'
       PolicyDocument:
+        Version: '2012-10-17'
         Statement:
-          - Sid: 'AllowGetObject'
-            Effect: 'Allow'
+          - Effect: Allow
             Principal: '*'
             Action: 's3:GetObject'
-            Resource: !Sub 'arn:aws:s3:::${MyS3Bucket}/*'
-            Condition:
-              StringEquals:
-                'aws:Referer': !Ref 'AWS::AccountId'
-          - Sid: 'AllowPutObject'
-            Effect: 'Allow'
-            Principal: '*'
-            Action: 's3:PutObject'
-            Resource: !Sub 'arn:aws:s3:::${MyS3Bucket}/*'
-            Condition:
-              StringEquals:
-                'aws:Referer': !Ref 'AWS::AccountId'
+            Resource:
+              Fn::Join:
+                - ''
+                - - 'arn:aws:s3:::'
+                  - Ref: 'MyBucket'
+                  - '/*'
+
 Outputs:
-  BucketURL:
-    Value: !GetAtt MyS3Bucket.WebsiteURL
-    Description: URL do bucket S3
-  AccessKey:
-    Value: !Ref MyS3Bucket
-    Description: Chave de acesso ao bucket S3
+  MyBucketName:
+    Value: !Ref MyBucket
+    Export:
+      Name: !Sub '${AWS::StackName}-MyBucketName'
+  MyBucketArn:
+    Value: !GetAtt MyBucket.Arn
+    Export:
+      Name: !Sub '${AWS::StackName}-MyBucketArn'
