@@ -1,0 +1,115 @@
+name: Issue Deploy
+
+on:
+  issues:
+    types: [labeled]
+
+env:
+  AWS_REGION: 'us-east-1'
+
+jobs:
+  infra_giropops:
+    name: Deploy Infra Giropops
+    runs-on: ubuntu-latest
+    if: contains(github.event.issue.labels.*.name, 'infra-giropops') &&
+        contains(github.event.issue.labels.*.name, 'approved')
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Configure AWS credentials
+        id: configure-aws-credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Deploy Infra Giropops
+        id: giropops-infra
+        uses: aws-actions/aws-cloudformation-github-deploy@v1
+        with:
+            name: giropops-infra
+            template: './files/giropops-infra.yaml'
+            no-fail-on-empty-changeset: "1"
+            capabilities: CAPABILITY_IAM
+            timeout-in-minutes: "10"
+
+  database:
+    runs-on: ubuntu-latest
+    if: contains(github.event.issue.labels.*.name, 'database') &&
+        contains(github.event.issue.labels.*.name, 'approved')
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Configure AWS credentials
+        id: configure-aws-credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+          
+      - name: Deploy Database
+        id: giropops-database
+        uses: aws-actions/aws-cloudformation-github-deploy@v1
+        with:
+            name: giropops-database
+            template: './files/database.yaml'
+            no-fail-on-empty-changeset: "1"
+            capabilities: CAPABILITY_IAM
+            timeout-in-minutes: "10"
+
+
+  ec2:
+    runs-on: ubuntu-latest
+    if: contains(github.event.issue.labels.*.name, 'ec2') &&
+        contains(github.event.issue.labels.*.name, 'approved')
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Configure AWS credentials
+        id: configure-aws-credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+          
+      - name: Deploy EC2
+        id: giropops-ec2
+        uses: aws-actions/aws-cloudformation-github-deploy@v1
+        with:
+            name: giropops-ec2
+            template: './files/ec2.yaml'
+            no-fail-on-empty-changeset: "1"
+            capabilities: CAPABILITY_IAM
+            timeout-in-minutes: "10"
+
+  s3:
+    runs-on: ubuntu-latest
+    if: contains(github.event.issue.labels.*.name, 's3') &&
+        contains(github.event.issue.labels.*.name, 'approved')
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Configure AWS credentials
+        id: configure-aws-credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+          
+      - name: Deploy S3
+        id: giropops-s3
+        uses: aws-actions/aws-cloudformation-github-deploy@v1
+        with:
+            name: giropops-s3
+            template: './files/s3.yaml'
+            no-fail-on-empty-changeset: "1"
+            capabilities: CAPABILITY_IAM
+            timeout-in-minutes: "10"
