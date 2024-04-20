@@ -34,6 +34,22 @@ jobs:
             no-fail-on-empty-changeset: "1"
             capabilities: CAPABILITY_IAM
             timeout-in-minutes: "10"
+    
+      - name: Get CloudFormation Outputs
+        id: get_outputs
+        run: |
+          outputs=$(aws cloudformation describe-stacks --stack-name giropops-infra --query 'Stacks[0].Outputs' --output json)
+          echo "::set-output name=cf_outputs::$outputs"
+
+      - name: Write Outputs to Issue
+        uses: peter-evans/create-or-update-comment@v4
+        with:
+          issue-number: ${{ github.event.issue.number }}
+          body: |
+            **CloudFormation Outputs**
+            ```json
+            ${{ steps.get_outputs.outputs.cf_outputs }}
+            ```
 
   database:
     runs-on: ubuntu-latest
