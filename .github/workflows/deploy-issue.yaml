@@ -38,15 +38,15 @@ jobs:
       - name: Get CloudFormation Outputs
         id: get_outputs
         run: |
-          outputs=$(aws cloudformation describe-stacks --stack-name giropops-infra --query 'Stacks[0].Outputs' --output json)
-          echo "::set-output name=cf_outputs::$outputs"
+          echo "::set-output name=cf_outputs::$(aws cloudformation describe-stacks --stack-name giropops-infra --query 'Stacks[0].Outputs' --output json)"
 
       - name: Write Outputs to Issue
         uses: peter-evans/create-or-update-comment@v4
         with:
           issue-number: ${{ github.event.issue.number }}
           body: |
-            **CloudFormation Outputs**
+            The following resources were created:
+
             ```json
             ${{ steps.get_outputs.outputs.cf_outputs }}
             ```
