@@ -9,11 +9,12 @@ on:
         default: 'us-east-1'
       keypair:
         description: 'SSH Key Pair'
-        default: 'PICK'
         required: true
+        default: 'PICK'
       template-file:
         description: 'CloudFormation template file'
         required: true
+        default: './giropops-infra.yaml'
 
 jobs:
   cluster:
