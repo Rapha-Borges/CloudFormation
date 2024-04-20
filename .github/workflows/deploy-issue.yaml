@@ -50,8 +50,10 @@ jobs:
             ```json
             ${{ steps.get_outputs.outputs.cf_outputs }}
             ```
+          token: ${{ secrets.CLOUD_FORMATION }}
 
   database:
+    name: Deploy Database
     runs-on: ubuntu-latest
     if: contains(github.event.issue.labels.*.name, 'database') &&
         contains(github.event.issue.labels.*.name, 'approved')
@@ -79,6 +81,7 @@ jobs:
 
 
   ec2:
+    name: Deploy EC2
     runs-on: ubuntu-latest
     if: contains(github.event.issue.labels.*.name, 'ec2') &&
         contains(github.event.issue.labels.*.name, 'approved')
@@ -105,6 +108,7 @@ jobs:
             timeout-in-minutes: "10"
 
   s3:
+    name: Deploy S3
     runs-on: ubuntu-latest
     if: contains(github.event.issue.labels.*.name, 's3') &&
         contains(github.event.issue.labels.*.name, 'approved')
