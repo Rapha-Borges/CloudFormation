@@ -33,7 +33,7 @@ Resources:
     Type: AWS::EC2::Instance
     Properties:
       InstanceType: t2.micro
-      SecurityGroups:
+      SecurityGroupIds:
         - !Ref SecurityGroup
       KeyName: PICK
       ImageId: ami-080e1f13689e07408
