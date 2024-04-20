@@ -79,7 +79,6 @@ jobs:
             capabilities: CAPABILITY_IAM
             timeout-in-minutes: "10"
 
-
   ec2:
     name: Deploy EC2
     runs-on: ubuntu-latest
