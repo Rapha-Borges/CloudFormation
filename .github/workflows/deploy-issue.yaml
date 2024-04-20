@@ -116,11 +116,13 @@ jobs:
             echo "cf_outputs=${outputs}" >> $GITHUB_ENV
           fi
 
-      - name: Debug Outputs
+      - name: Extract Outputs
         run: |
-          echo "CloudFormation Outputs: ${{ env.cf_outputs }}"
-        if: env.cf_outputs != 'null'
-
+          instance_id=$(echo "${{ env.cf_outputs }}" | jq -r '.[] | select(.OutputKey == "InstanceId").OutputValue')
+          public_ip=$(echo "${{ env.cf_outputs }}" | jq -r '.[] | select(.OutputKey == "PublicIp").OutputValue')
+          echo "instance_id=${instance_id}" >> $GITHUB_ENV
+          echo "public_ip=${public_ip}" >> $GITHUB_ENV
+            
       - name: Write Outputs to Issue
         uses: peter-evans/create-or-update-comment@v4
         with:
@@ -128,10 +130,11 @@ jobs:
           body: |
             The following resources were created:
 
-            ```json
-            ${{ env.cf_outputs }}
-            ```
-          token: ${{ secrets.CLOUD_FORMATION }}
+              ```json
+              InstanceId: ${{ env.instance_id }}
+              PublicIp: ${{ env.public_ip }}
+              ```
+            token: ${{ secrets.CLOUD_FORMATION }}
 
   s3:
     name: Deploy S3
@@ -169,13 +172,11 @@ jobs:
           else
             echo "cf_outputs=${outputs}" >> $GITHUB_ENV
           fi
-      
-      - name: Extract Outputs
+
+      - name: Debug Outputs
         run: |
-          instance_id=$(echo "${{ env.cf_outputs }}" | jq -r '.[] | select(.OutputKey == "InstanceId").OutputValue')
-          public_ip=$(echo "${{ env.cf_outputs }}" | jq -r '.[] | select(.OutputKey == "PublicIp").OutputValue')
-          echo "instance_id=${instance_id}" >> $GITHUB_ENV
-          echo "public_ip=${public_ip}" >> $GITHUB_ENV
+          echo "CloudFormation Outputs: ${{ env.cf_outputs }}"
+        if: env.cf_outputs != 'null'
           
       - name: Write Outputs to Issue
         uses: peter-evans/create-or-update-comment@v4
@@ -185,7 +186,6 @@ jobs:
             The following resources were created:
 
             ```json
-            InstanceId: ${{ env.instance_id }}
-            PublicIp: ${{ env.public_ip }}
+            ${{ env.cf_outputs }}
             ```
           token: ${{ secrets.CLOUD_FORMATION }}
