@@ -137,8 +137,12 @@ jobs:
       - name: Get CloudFormation Outputs
         id: get_outputs
         run: |
-          outputs=$(aws cloudformation describe-stacks --stack-name giropops-s3 --query 'Stacks[0].Outputs' --output json)
-          echo "${outputs}" >> $GITHUB_ENV
+          outputs=$(aws cloudformation describe-stacks --stack-name giropops-s3 --query 'Stacks[0].Outputs' --output json | tr -d '\n')
+          if [ -z "$outputs" ]; then
+            echo "A saída do CloudFormation está vazia."
+          else
+            echo "cf_outputs=${outputs}" >> $GITHUB_ENV
+          fi
 
       - name: Debug Outputs
         run: |
