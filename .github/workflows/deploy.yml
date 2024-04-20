@@ -11,6 +11,9 @@ on:
         description: 'SSH Key Pair'
         default: 'PICK'
         required: true
+      template-file:
+        description: 'CloudFormation template file'
+        required: true
 
 jobs:
   cluster:
@@ -43,7 +46,7 @@ jobs:
       run: |
         aws cloudformation deploy \
           --stack-name ${{ steps.env-name.outputs.environment }} \
-          --template-file ./giropops-infra.yaml \
+          --template-file ${{ github.event.inputs.template-file }} \
           --parameter-overrides EnvironmentName=${{ steps.env-name.outputs.environment }} \
           --capabilities CAPABILITY_IAM \
           --region ${{ github.event.inputs.region }}
