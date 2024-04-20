@@ -42,7 +42,7 @@ jobs:
       run: |
         aws cloudformation deploy \
           --stack-name ${{ steps.env-name.outputs.environment }} \
-          --template-file ./cloudformation/giropops-infra.yaml \
+          --template-file ./giropops-infra.yaml \
           --parameter-overrides EnvironmentName=${{ steps.env-name.outputs.environment }} \
           --capabilities CAPABILITY_IAM \
           --region ${{ github.event.inputs.region }}
