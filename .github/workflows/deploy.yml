@@ -6,9 +6,10 @@ on:
       region:
         description: 'AWS Region'
         required: true
-        default: 'sa-east-1'
+        default: 'us-east-1'
       keypair:
         description: 'SSH Key Pair'
+        default: 'PICK'
         required: true
 
 jobs:
