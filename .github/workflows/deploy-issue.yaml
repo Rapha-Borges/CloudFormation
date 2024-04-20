@@ -106,22 +106,19 @@ jobs:
             capabilities: CAPABILITY_IAM
             timeout-in-minutes: "10"
 
-      - name: Get CloudFormation Outputs
-        id: get_outputs
+      - name: Get and Extract CloudFormation Outputs
+        id: get_and_extract_outputs
         run: |
           outputs=$(aws cloudformation describe-stacks --stack-name giropops-ec2 --query 'Stacks[0].Outputs' --output json | tr -d '\n')
           if [ -z "$outputs" ]; then
             echo "A saída do CloudFormation está vazia."
           else
-            echo "cf_outputs=${outputs}" >> $GITHUB_ENV
+            instance_id=$(echo "$outputs" | jq -r '.[] | select(.OutputKey == "InstanceId").OutputValue')
+            public_ip=$(echo "$outputs" | jq -r '.[] | select(.OutputKey == "PublicIp").OutputValue')
+            echo "instance_id=${instance_id}" >> $GITHUB_ENV
+            echo "public_ip=${public_ip}" >> $GITHUB_ENV
           fi
-
-      - name: Extract Outputs
-        run: |
-          instance_id=$(echo "${{ env.cf_outputs }}" | jq -r '.[] | select(.OutputKey == "InstanceId").OutputValue')
-          public_ip=$(echo "${{ env.cf_outputs }}" | jq -r '.[] | select(.OutputKey == "PublicIp").OutputValue')
-          echo "instance_id=${instance_id}" >> $GITHUB_ENV
-          echo "public_ip=${public_ip}" >> $GITHUB_ENV
+          
             
       - name: Write Outputs to Issue
         uses: peter-evans/create-or-update-comment@v4
@@ -130,7 +127,7 @@ jobs:
           body: |
             The following resources were created:
 
-              ```json
+              ```
               InstanceId: ${{ env.instance_id }}
               PublicIp: ${{ env.public_ip }}
               ```
