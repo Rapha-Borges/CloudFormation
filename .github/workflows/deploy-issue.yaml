@@ -118,7 +118,6 @@ jobs:
             echo "instance_id=${instance_id}" >> $GITHUB_ENV
             echo "public_ip=${public_ip}" >> $GITHUB_ENV
           fi
-          
             
       - name: Write Outputs to Issue
         uses: peter-evans/create-or-update-comment@v4
@@ -131,7 +130,7 @@ jobs:
               InstanceId: ${{ env.instance_id }}
               PublicIp: ${{ env.public_ip }}
               ```
-            token: ${{ secrets.CLOUD_FORMATION }}
+          token: ${{ secrets.CLOUD_FORMATION }}
 
   s3:
     name: Deploy S3
