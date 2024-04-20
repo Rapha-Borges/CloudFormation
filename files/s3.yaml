@@ -1,37 +1,11 @@
+AWSTemplateFormatVersion: "2010-09-09"
 Resources:
-  MyBucket:
-    Type: 'AWS::S3::Bucket'
+  MyS3Bucket:
+    Type: AWS::S3::Bucket
     Properties:
-      BucketName: my-bucket
-      PublicAccessBlockConfiguration:
-        BlockPublicAcls: false
-        BlockPublicPolicy: false
-        IgnorePublicAcls: false
-        RestrictPublicBuckets: false
-  MyBucketPolicy:
-    Type: 'AWS::S3::BucketPolicy'
-    Properties:
-      Bucket:
-        Ref: 'MyBucket'
-      PolicyDocument:
-        Version: '2012-10-17'
-        Statement:
-          - Effect: Allow
-            Principal: '*'
-            Action: 's3:GetObject'
-            Resource:
-              Fn::Join:
-                - ''
-                - - 'arn:aws:s3:::'
-                  - Ref: 'MyBucket'
-                  - '/*'
-
+      AccessControl: PublicRead
+      BucketName: my-unique-bucket-name # Nome do bucket
 Outputs:
-  MyBucketName:
-    Value: !Ref MyBucket
-    Export:
-      Name: !Sub '${AWS::StackName}-MyBucketName'
-  MyBucketArn:
-    Value: !GetAtt MyBucket.Arn
-    Export:
-      Name: !Sub '${AWS::StackName}-MyBucketArn'
+  S3BucketURL:
+    Value: !GetAtt MyS3Bucket.WebsiteURL
+    Description: URL pública do bucket S3
