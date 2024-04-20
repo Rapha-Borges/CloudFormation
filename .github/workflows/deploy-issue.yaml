@@ -138,6 +138,11 @@ jobs:
         id: get_outputs
         run: |
           echo "::set-output name=cf_outputs::$(aws cloudformation describe-stacks --stack-name giropops-s3 --query 'Stacks[0].Outputs' --output json)"
+
+      - name: Debug Outputs
+        run: |
+          echo "CloudFormation Outputs: ${{ toJson(steps.get_outputs.outputs.cf_outputs) }}"
+        if: steps.get_outputs.outputs.cf_outputs != '[]'
           
       - name: Write Outputs to Issue
         uses: peter-evans/create-or-update-comment@v4
@@ -147,6 +152,6 @@ jobs:
             The following resources were created:
 
             ```json
-            ${{ steps.get_outputs.outputs.cf_outputs }}
+            ${{ toJson(steps.get_outputs.outputs.cf_outputs) }}
             ```
           token: ${{ secrets.CLOUD_FORMATION }}
