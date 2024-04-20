@@ -168,7 +168,7 @@ Resources:
             DeleteOnTermination: true
       Volumes:
         - VolumeId: !Ref DBVolume
-          Device: /dev/sdc
+          Device: /dev/sda1
       Tags:
         - Key: Name
           Value: !Sub ${AWS::StackName}-DB
