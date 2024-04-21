@@ -1,3 +1,7 @@
+Parameters:
+  EnvID:
+    Type: String
+
 Resources:
   VPC:
     Type: AWS::EC2::VPC
