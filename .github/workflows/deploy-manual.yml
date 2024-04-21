@@ -7,10 +7,6 @@ on:
         description: 'AWS Region'
         required: true
         default: 'us-east-1'
-      keypair:
-        description: 'SSH Key Pair'
-        required: true
-        default: 'PICK'
       template-file:
         description: 'CloudFormation template file'
         required: true
@@ -50,4 +46,4 @@ jobs:
             no-fail-on-empty-changeset: "1"
             capabilities: CAPABILITY_IAM
             timeout-in-minutes: "10"
-            parameter-overrides: "EnvID=${{ github.event.inputs.stack-name }},KeyName=${{ github.event.inputs.keypair }}"
+            parameter-overrides: "EnvID=${{ github.event.inputs.stack-name }}

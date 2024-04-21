@@ -2,15 +2,12 @@ Parameters:
   EnvID:
     Type: String
 
-  KeyName:
-    Type: String
-
 Resources:
   Ec2Instance:
     Type: AWS::EC2::Instance
     Properties:
       InstanceType: t2.micro
-      KeyName: !Ref KeyName
+      KeyName: PICK
       ImageId: ami-080e1f13689e07408
       VpcId:
         Fn::ImportValue: 
