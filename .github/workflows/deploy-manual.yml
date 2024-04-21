@@ -46,4 +46,4 @@ jobs:
             no-fail-on-empty-changeset: "1"
             capabilities: CAPABILITY_IAM
             timeout-in-minutes: "10"
-            parameter-overrides: "EnvID=${{ github.event.inputs.stack-name }}
+            parameter-overrides: "EnvID=${{ github.event.inputs.stack-name }}"
