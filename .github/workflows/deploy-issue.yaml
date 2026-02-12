@@ -27,7 +27,7 @@ jobs:
 
       - name: Deploy Infra Giropops
         id: giropops-infra
-        uses: aws-actions/aws-cloudformation-github-deploy@v1
+        uses: aws-actions/aws-cloudformation-github-deploy@v2
         with:
             name: giropops-infra
             template: './files/giropops-infra.yaml'
@@ -71,7 +71,7 @@ jobs:
           
       - name: Deploy Database
         id: giropops-database
-        uses: aws-actions/aws-cloudformation-github-deploy@v1
+        uses: aws-actions/aws-cloudformation-github-deploy@v2
         with:
             name: giropops-database
             template: './files/database.yaml'
@@ -98,7 +98,7 @@ jobs:
           
       - name: Deploy EC2
         id: giropops-ec2
-        uses: aws-actions/aws-cloudformation-github-deploy@v1
+        uses: aws-actions/aws-cloudformation-github-deploy@v2
         with:
             name: giropops-ec2
             template: './files/ec2.yaml'
@@ -151,7 +151,7 @@ jobs:
           
       - name: Deploy S3
         id: giropops-s3
-        uses: aws-actions/aws-cloudformation-github-deploy@v1
+        uses: aws-actions/aws-cloudformation-github-deploy@v2
         with:
             name: giropops-s3
             template: './files/s3.yaml'
