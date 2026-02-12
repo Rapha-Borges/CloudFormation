@@ -39,7 +39,7 @@ jobs:
 
       - name: Deploy stack
         id: deploy
-        uses: aws-actions/aws-cloudformation-github-deploy@v1
+        uses: aws-actions/aws-cloudformation-github-deploy@v2
         with:
             name: ${{ github.event.inputs.stack-name }}-${{ github.event.inputs.resources }}
             template: ${{ github.event.inputs.template-file }}
